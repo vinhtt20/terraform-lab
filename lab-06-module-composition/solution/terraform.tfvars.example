@@ -1,0 +1,5 @@
+# Lab 06 keeps its `services` map inside locals (in main.tf) for clarity —
+# there are no required variables. This file is intentionally empty.
+#
+# In a real project you would typically expose `services` as a variable so
+# different environments (dev/stg/prod) can override it via tfvars.

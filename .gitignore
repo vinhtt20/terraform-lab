@@ -1,0 +1,45 @@
+# Terraform
+**/.terraform/
+**/.terraform.lock.hcl.bak
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+crash.log
+crash.*.log
+
+# Plan files
+*.tfplan
+*.tfplan.json
+
+# Local override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Var files có secret thật (giữ .example)
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+
+# Generated config từ -generate-config-out
+generated.tf
+generated_*.tf
+
+# CLI
+.terraformrc
+terraform.rc
+
+# IDE & OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Claude Code local config
+.claude/
+
+# Test artifacts
+.terraform.test/
+testdata/.tf*

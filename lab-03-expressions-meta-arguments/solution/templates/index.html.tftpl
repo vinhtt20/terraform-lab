@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>${name} — tflab-03</title>
+  <style>
+    body { font-family: -apple-system, system-ui, sans-serif; max-width: 640px; margin: 40px auto; padding: 0 16px; }
+    h1 { color: #1f6feb; }
+    table { border-collapse: collapse; width: 100%; }
+    td, th { border: 1px solid #d0d7de; padding: 6px 10px; text-align: left; }
+    .muted { color: #6e7781; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+  <h1>Service: ${name}</h1>
+  <p>Exposed on port <code>${port}</code>.</p>
+
+  <h2>Environment</h2>
+  <table>
+    <thead><tr><th>Key</th><th>Value</th></tr></thead>
+    <tbody>
+%{ for k, v in env ~}
+      <tr><td><code>${k}</code></td><td>${v}</td></tr>
+%{ endfor ~}
+%{ if length(env) == 0 ~}
+      <tr><td colspan="2" class="muted">(no env vars)</td></tr>
+%{ endif ~}
+    </tbody>
+  </table>
+
+  <p class="muted">Rendered at plan time: ${rendered_at}</p>
+</body>
+</html>

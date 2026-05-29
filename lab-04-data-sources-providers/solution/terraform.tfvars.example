@@ -1,0 +1,5 @@
+# Example tfvars for Lab 04.
+# Leave enable_geoip = false for offline / CI environments.
+# Set to true only when you specifically want to demo the http data source.
+
+enable_geoip = false

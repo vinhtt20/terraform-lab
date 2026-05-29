@@ -1,0 +1,20 @@
+# Example tfvars — copy to terraform.tfvars (will be auto-loaded) or pass via -var-file.
+# Demonstrates how to override the defaults declared in variables.tf.
+
+service_name       = "demo"
+replicas           = 2
+external_port_base = 8082
+
+image = {
+  name = "nginx"
+  tag  = "1.27-alpine"
+}
+
+labels = {
+  owner = "team-a"
+  env   = "dev"
+}
+
+# admin_password is intentionally omitted so Terraform generates a random one.
+# To supply an explicit password, prefer environment variable (do NOT commit):
+#   export TF_VAR_admin_password='your-strong-secret-here'

@@ -1,0 +1,3 @@
+# Example tfvars — copy to terraform.tfvars or pass via -var-file.
+
+image = "nginx:1.27-alpine"

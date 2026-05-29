@@ -1,0 +1,24 @@
+# Example tfvars — overrides the default `services` map.
+# Copy to terraform.tfvars (auto-loaded) or pass via -var-file=...
+#
+# Adding a new entry here triggers exactly 1 add (no destroy/recreate of
+# existing services), because resources use for_each with stable string keys.
+
+services = {
+  alpha = {
+    image         = "nginx:1.27-alpine"
+    external_port = 8083
+    env           = { ROLE = "frontend", TEAM = "alpha" }
+  }
+  bravo = {
+    image         = "nginx:1.27-alpine"
+    external_port = 8084
+    env           = { ROLE = "api", TEAM = "bravo" }
+  }
+  charlie = {
+    image              = "nginx:1.27-alpine"
+    external_port      = 8085
+    env                = { ROLE = "worker", TEAM = "charlie" }
+    enable_healthcheck = false
+  }
+}
