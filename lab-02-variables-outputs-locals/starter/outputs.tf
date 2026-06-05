@@ -9,21 +9,22 @@
 
 output "container_names" {
   description = "Names of all replica containers."
-  value       = []
+  value       = [for c in docker_container.app : c.name]
 }
 
 output "ports" {
   description = "Host ports exposed by each replica."
-  value       = []
+  value       = [for c in docker_container.app : tolist(c.ports)[0].external]
 }
 
 # TODO: đánh dấu sensitive = true.
 output "password" {
-  description = "Admin password."
-  value       = "TODO-replace-with-local.password_effective"
+  description = "Admin password (provided by caller or generated)."
+  value       = local.password_effective
+  sensitive   = true
 }
 
 output "summary_path" {
   description = "Path to the generated JSON summary."
-  value       = "TODO-replace-with-local_file.summary.filename"
+  value       = local_file.summary.filename
 }

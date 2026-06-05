@@ -21,10 +21,10 @@ variable "image" {
   }
 
   # TODO 1: thêm validation chặn tag == "latest", với error_message hữu ích.
-  # validation {
-  #   condition     = ...
-  #   error_message = "..."
-  # }
+  validation {
+    condition     = var.image.tag != "latest"
+    error_message = "Tag 'latest' is not allowed."
+  }
 }
 
 variable "service_name" {
@@ -35,6 +35,14 @@ variable "service_name" {
   # TODO 2: thêm 2 validation:
   #   - length trong [3, 32]
   #   - khớp regex ^[a-z0-9-]+$
+  validation {
+    condition     = length(var.service_name) >= 3 && length(var.service_name) <= 32
+    error_message = "Service name must be between 3 and 32 characters."
+  }
+  validation {
+    condition     = can(regex("^[a-z0-9-]+$", var.service_name))
+    error_message = "Service name must contain only lowercase letters, numbers, and dashes."
+  }
 }
 
 variable "replicas" {
@@ -43,6 +51,10 @@ variable "replicas" {
   default     = 2
 
   # TODO 3: thêm validation 1 <= var.replicas <= 5.
+  validation {
+    condition     = var.replicas >= 1 && var.replicas <= 5
+    error_message = "Replicas must be between 1 and 5."
+  }
 }
 
 variable "labels" {
@@ -60,6 +72,10 @@ variable "external_port_base" {
   default     = 8082
 
   # TODO 4: thêm validation 8000 <= var.external_port_base <= 9000.
+  validation {
+    condition     = var.external_port_base >= 8000 && var.external_port_base <= 9000
+    error_message = "External port base must be between 8000 and 9000."
+  }
 }
 
 variable "admin_password" {
@@ -67,4 +83,5 @@ variable "admin_password" {
   type        = string
   default     = null
   # TODO 5: đánh dấu sensitive = true.
+  # sensitive = true
 }
