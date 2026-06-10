@@ -6,20 +6,25 @@
 
 output "urls" {
   description = "Map of service name to URL."
-  value       = {}
+  value = {
+    for k, v in var.services : k
+    => "http://localhost:${v.external_port}"
+  }
 }
 
 output "service_count" {
   description = "Number of services."
-  value       = 0
+  value       = length(var.services)
 }
 
 output "created_at" {
   description = "Plan-time timestamp."
-  value       = "TODO"
+  value       = local.rendered_at // "" for 20 passes
 }
 
 output "container_names" {
   description = "Names of all deployed containers."
-  value       = []
+  value = [
+    for k, v in var.services : docker_container.app[k].name
+  ]
 }

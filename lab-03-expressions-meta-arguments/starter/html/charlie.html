@@ -2,24 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>${name} — tflab-03</title>
+  <title>charlie — tflab-03</title>
 </head>
 <body>
   <!-- TODO T1: render tên service qua biến `name`. -->
-  <h1>Service: ${name}</h1>
+  <h1>Service: charlie</h1>
 
   <!-- TODO T2: render cổng qua biến `port`. -->
-  <p>Port: ${port}</p>
+  <p>Port: 8085</p>
 
-  <!-- TODO T3: dùng %{ for k, v in env }...%{ endfor } để in từng cặp KEY=VALUE. -->
+  <!-- TODO T3: dùng ... để in từng cặp KEY=VALUE. -->
   <h2>Environment</h2>
   <ul>
-  %{ for k, v in env } 
-    <li>${k} = ${v}</li>
-  %{ endfor }
+   
+    <li>ROLE = charlie</li>
+  
   </ul>
 
   <!-- TODO T4: render `rendered_at`. -->
-  <p>Rendered at: ${rendered_at}</p>
+  <p>Rendered at: 2026-06-10T11:49:05Z</p>
 </body>
 </html>

@@ -15,7 +15,32 @@ variable "services" {
   }))
 
   # TODO 1: thêm 3 service alpha/bravo/charlie với env phù hợp.
-  default = {}
+  default = {
+    alpha = {
+      image         = "nginx:1.27-alpine"
+      external_port = 8083
+      env = {
+        ROLE = "alpha"
+      }
+      enable_healthcheck = true
+    }
+    bravo = {
+      image         = "nginx:1.27-alpine"
+      external_port = 8084
+      env = {
+        ROLE = "bravo"
+      }
+      enable_healthcheck = true
+    }
+    charlie = {
+      image         = "nginx:1.27-alpine"
+      external_port = 8085
+      env = {
+        ROLE = "charlie"
+      }
+      enable_healthcheck = true
+    }
+  }
 }
 
 variable "global_labels" {

@@ -11,10 +11,12 @@
 
 locals {
   # TODO L1: dùng plantimestamp() để chụp 1 thời điểm khi plan.
-  rendered_at = "TODO"
+  rendered_at = plantimestamp()
 
   # TODO L2: build map { service_key => merge(global, { service = key }) }
-  service_labels = {}
+  service_labels = {
+    for k, v in var.services : k => merge(var.global_labels, { service = k })
+  }
 }
 
 resource "docker_image" "nginx" {
@@ -26,8 +28,18 @@ resource "docker_image" "nginx" {
 # TODO M2: content = templatefile("${path.module}/templates/index.html.tftpl", { name = ..., port = ..., env = ..., rendered_at = ... })
 # TODO M3: lifecycle { ignore_changes = [content] } để rendered_at không gây drift.
 resource "local_file" "html" {
-  filename = "${path.module}/html/placeholder.html"
-  content  = "TODO"
+  for_each = var.services
+  filename = "${path.module}/html/${each.key}.html"
+  content = templatefile("${path.module}/templates/index.html.tftpl", {
+    name        = each.key
+    port        = each.value.external_port
+    env         = each.value.env
+    rendered_at = local.rendered_at
+  })
+
+  lifecycle {
+    ignore_changes = [content]
+  }
 }
 
 # TODO M4: for_each = var.services.
@@ -38,12 +50,39 @@ resource "local_file" "html" {
 # TODO M9: dynamic "healthcheck" { for_each = each.value.enable_healthcheck ? [1] : [] }.
 # TODO M10: dynamic "labels" { for_each = local.service_labels[each.key] }.
 resource "docker_container" "app" {
-  name  = "tflab-03-placeholder"
-  image = docker_image.nginx.image_id
+  for_each = var.services
+  name     = "tflab-03-${each.key}"
+  image    = docker_image.nginx.image_id
 
   ports {
     internal = 80
-    external = 8083
+    external = each.value.external_port
+  }
+
+  env = [for k, v in each.value.env : "${k}=${v}"]
+
+  volumes {
+    host_path      = abspath(local_file.html[each.key].filename)
+    container_path = "/usr/share/nginx/html/index.html"
+    read_only      = true
+  }
+
+  dynamic "healthcheck" {
+    for_each = each.value.enable_healthcheck ? [1] : []
+    content {
+      test     = ["CMD-SHELL", "curl -f http://localhost/ || exit 1"]
+      interval = "30s"
+      timeout  = "10s"
+      retries  = 3
+    }
+  }
+
+  dynamic "labels" {
+    for_each = local.service_labels[each.key]
+    content {
+      label = labels.key
+      value = labels.value
+    }
   }
 
   restart = "unless-stopped"
